@@ -1,0 +1,14 @@
+kagglehub
+pandas
+torch>=2.2.0
+torchvision>=0.17.2
+torchaudio>=2.2.2
+transformers>=4.45.0
+safetensors>=0.4.5
+Pillow>=10.0.0
+datasets
+evaluate
+numpy<2.0
+requests
+safetensors
+tqdm
