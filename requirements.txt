@@ -5,7 +5,7 @@ torchvision>=0.17.2
 torchaudio>=2.2.2
 transformers>=4.45.0
 safetensors>=0.4.5
-Pillow>=10.0.0
+Pillow>=10.3.0
 datasets
 evaluate
 numpy<2.0

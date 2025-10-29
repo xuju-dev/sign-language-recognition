@@ -1,5 +1,5 @@
 model_name: "google/mobilenet_v2_1.0_224"
-data_dir: "./data/asl_alphabet_dataset"
+data_root: "./data/asl_alphabet_dataset/asl_alphabet_preprocessed"
 output_dir: "./experiments"
 num_train_epochs: 5
 batch_size: 32
