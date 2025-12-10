@@ -56,24 +56,25 @@ def set_global_seed(seed: int):
         torch.cuda.manual_seed_all(seed)
 
 
-def prepare_output_dir(base_dir: str, model_name: str, hash_id: str, dt: str):
+def prepare_output_dir(base_dir: str, model_name: str, dt: str, activation_variant: str, seed: int):
     """
     Create and return a unique output directory path.
     """
     model_dir_name = model_name.split("/")[-1]
-    run_dir = os.path.join(base_dir, f"{model_dir_name}_{hash_id}_{dt}")
+    model_dir_name = model_dir_name.split(".")[0]
+    run_dir = os.path.join(base_dir, f"{model_dir_name}", f"{activation_variant}", f"{dt}")
     os.makedirs(run_dir, exist_ok=True)
     return run_dir
 
 
-def save_metadata(run_dir: str, cfg: dict, seed: int, hash_id: str):
+def save_metadata(run_dir: str, cfg: dict, seed: int, activation_variant):
     """
     Save configuration, seed, and hash info for full reproducibility.
     """
     metadata = {
         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "config_hash": hash_id,
         "random_seed": seed,
+        "activation_variant": activation_variant,
         "config": cfg,
     }
     with open(os.path.join(run_dir, "metadata.yaml"), "w") as f:
