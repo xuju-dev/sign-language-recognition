@@ -6,9 +6,17 @@ torchaudio>=2.2.2
 transformers>=4.45.0
 safetensors>=0.4.5
 Pillow>=10.3.0
+pytorch_lightning
 datasets
 evaluate
 numpy<2.0
 requests
 safetensors
 tqdm
+scikit-learn
+accelerate>=0.26.0
+timm
+
+# for statistical tests
+pingouin
+statsmodels
