@@ -56,13 +56,13 @@ def set_global_seed(seed: int):
         torch.cuda.manual_seed_all(seed)
 
 
-def prepare_output_dir(base_dir: str, model_name: str, dt: str, activation_variant: str, seed: int):
+def prepare_output_dir(base_dir: str, model_name: str,seed: int, activation_variant: str):
     """
     Create and return a unique output directory path.
     """
     model_dir_name = model_name.split("/")[-1]
     model_dir_name = model_dir_name.split(".")[0]
-    run_dir = os.path.join(base_dir, f"{model_dir_name}", f"{activation_variant}", f"{dt}")
+    run_dir = os.path.join(base_dir, f"{activation_variant}", f"{seed}")
     os.makedirs(run_dir, exist_ok=True)
     return run_dir
 
