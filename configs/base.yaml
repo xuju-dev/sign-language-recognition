@@ -1,0 +1,8 @@
+data:
+  root: "./data/asl_alphabet_dataset/asl_alphabet_preprocessed_224_0.1" 
+  img_size: 224 
+  batch_size: 32 
+  num_workers: 4          
+
+training:
+  device: "mps" 
