@@ -14,50 +14,33 @@ def extract_latest_jsons_per_model(root_dir):
         if not model_dir.is_dir():
             continue
 
-        # parse date folders safely
-        dated_dirs = []
-        for d in model_dir.iterdir():
-            if not d.is_dir():
-                continue
-            try:
-                ts = datetime.strptime(d.name, TIMESTAMP_FMT)
-                dated_dirs.append((ts, d))
-            except ValueError:
-                continue  # skip non-date folders
-
-        if not dated_dirs:
-            continue
-
-        # select latest timestamp
-        latest_ts, latest_dir = max(dated_dirs, key=lambda x: x[0])
-
         records = []
-        print(f"Extracting from model '{model_dir.name}' at timestamp '{latest_ts}'")
-        for fold_dir in latest_dir.iterdir():
-            if not fold_dir.is_dir():
+        for seed_dir in model_dir.iterdir():
+            if not seed_dir.is_dir():
                 continue
 
-            for json_file in fold_dir.glob("*.json"):
+            print(f"Extracting from model '{model_dir.name}' with seed '{seed_dir}'")
+            for json_file in seed_dir.glob("*.json"):
                 with open(json_file, "r") as f:
                     data = json.load(f)
 
                 if isinstance(data, dict):
                     row = pd.json_normalize(data).iloc[0].to_dict()
                     records.append({
-                        **row,
                         "model_variant": model_dir.name,
+                        "global seed": seed_dir.name,
                         "timestamp": latest_ts,
-                        "fold": fold_dir.name
+                        **row,
                     })
 
                 elif isinstance(data, list):
                     for item in data:
                         row = pd.json_normalize(item).iloc[0].to_dict()
                         records.append({
-                            **row,
                             "model_variant": model_dir.name,
+                            "global seed": seed_dir.name,
                             "timestamp": latest_ts,
-                            "fold": fold_dir.name
+                            **row,
                         })
 
         if records:
@@ -67,7 +50,7 @@ def extract_latest_jsons_per_model(root_dir):
 
 if __name__ == "__main__":
     root_directory = "./experiments"
-    output_csv = "compiled_experimental_results.csv"
+    output_csv = "compiled_experimental_results_0.2/2.csv"
 
     model_dataframes = extract_latest_jsons_per_model(root_directory)
 

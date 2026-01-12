@@ -40,7 +40,16 @@ def load_datasets():
     data_cfg = config["data"]
 
     # --- Define transforms (should match your preprocessing normalization) ---
-    transform = transforms.Compose([
+    train_transforms = transforms.Compose([
+        transforms.RandomHorizontalFlip(),
+        transforms.RandomRotation(25),
+        transforms.ColorJitter(brightness=0.4, contrast=0.3, saturation=0.2, hue=0.1),
+        transforms.Resize((data_cfg["img_size"], data_cfg["img_size"])),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
+    ])
+
+    val_transforms = transforms.Compose([
         transforms.Resize((data_cfg["img_size"], data_cfg["img_size"])),
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
@@ -52,9 +61,9 @@ def load_datasets():
     test_path  = f"{data_cfg['root']}/test"
 
     # --- Load datasets ---
-    train_dataset = HFImageFolder(datasets.ImageFolder(root=train_path, transform=transform))
-    val_dataset   = HFImageFolder(datasets.ImageFolder(root=val_path, transform=transform))
-    test_dataset  = HFImageFolder(datasets.ImageFolder(root=test_path, transform=transform))
+    train_dataset = HFImageFolder(datasets.ImageFolder(root=train_path, transform=train_transforms))
+    val_dataset   = HFImageFolder(datasets.ImageFolder(root=val_path, transform=val_transforms))
+    test_dataset  = HFImageFolder(datasets.ImageFolder(root=test_path, transform=val_transforms))
 
     # --- Create DataLoaders ---
     train_loader = DataLoader(train_dataset, batch_size=data_cfg["batch_size"], shuffle=True, num_workers=data_cfg["num_workers"])

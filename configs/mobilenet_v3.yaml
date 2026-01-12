@@ -1,7 +1,7 @@
 model_name: "timm/mobilenetv3_small_100.lamb_in1k"
 data_root: "./data/asl_alphabet_dataset/asl_alphabet_preprocessed_224_0.1"
 output_dir: "./experiments"
-num_train_epochs: 5
+num_train_epochs: 1
 batch_size: 32
 lr: 3e-4
 eval_strategy: "epoch"

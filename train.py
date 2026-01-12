@@ -1,6 +1,7 @@
 import os
 import json
 import time
+from pathlib import Path
 
 import torch
 import numpy as np
@@ -113,11 +114,13 @@ def run_experiment(config_path: str, seed, activation_variant: str = 'original')
         num_train_epochs=cfg["num_train_epochs"],
         logging_steps=cfg["logging_steps"],
         load_best_model_at_end=True,
+        weight_decay=0.01,
         metric_for_best_model="f1",
         greater_is_better=True,
         save_total_limit=1,
         report_to="none",
         seed=seed,
+        dataloader_pin_memory=False,  # MPS compatibility, uncomment if CUDA is used
     )
 
     # -----------------------
@@ -142,7 +145,7 @@ def run_experiment(config_path: str, seed, activation_variant: str = 'original')
 
         for train_idx, val_idx in skf.split(np.arange(num_samples), all_labels):
             fold_idx += 1
-            print(f"\n--- Fold {fold_idx}/{n_splits} ---")
+            print(f"\n--- ({repeat_idx + 1}) Fold {fold_idx}/{n_splits} ---")
 
             train_subset = Subset(dev_dataset, train_idx)
             val_subset = Subset(dev_dataset, val_idx)
@@ -171,14 +174,25 @@ def run_experiment(config_path: str, seed, activation_variant: str = 'original')
                 compute_metrics=compute_metrics,
             )
 
-            # Start fold timer
-            fold_start = time.time()
-
             # Check if any checkpoint exists in the fold output dir to resume to previous training
             checkpoint_dirs = [
                 os.path.join(fold_output_dir, d)
                 for d in os.listdir(fold_output_dir) if d.startswith("checkpoint-")
             ]
+            
+            # Track cumulative training time for resuming
+            training_info_path = os.path.join(fold_output_dir, "training_info.json")
+
+            if os.path.exists(training_info_path):
+                with open(training_info_path, "r") as f:
+                    training_info = json.load(f)
+            else:
+                training_info = {"completed": False, "cumulative_training_minutes": 0}
+
+            previous_duration = training_info["cumulative_training_minutes"]
+
+            # Start fold timer
+            fold_start = time.time()
 
             if checkpoint_dirs:
                 # Resume from the latest checkpoint
@@ -190,27 +204,60 @@ def run_experiment(config_path: str, seed, activation_variant: str = 'original')
                 trainer.train()
 
             fold_end = time.time()
-            fold_duration_minutes = (fold_end - fold_start) / 60
-            print(f"Fold {fold_idx} training duration: {fold_duration_minutes:.2f} minutes")
+
+            incremental_duration = (fold_end - fold_start) / 60
+
+            # Update cumulative duration
+            fold_duration_minutes = previous_duration + incremental_duration
+            training_info["cumulative_training_minutes"] = fold_duration_minutes
+
+            # Check if training completed for this fold
+            if trainer.state.global_step >= trainer.state.max_steps:
+                training_info["completed"] = True
+            
+            # Save cumulative training info
+            with open(training_info_path, "w") as f:
+                json.dump(training_info, f, indent=4)
 
             # EVALUATION
             metrics = trainer.evaluate()
-            metrics["training_duration_minutes"] = fold_duration_minutes
+            metrics["training_duration_minutes"] = training_info["cumulative_training_minutes"]
             fold_metrics.append(metrics)
+            print(f"\nFold {fold_idx} evaluation metrics:")
+            for k, v in metrics.items():
+                print(f"{k}: {v}")
+            
+            # Save intermediate results after one fold
+            with open(os.path.join(fold_output_dir, "results.json"), "w") as f:
+                json.dump(fold_metrics, f, indent=4)
 
         # aggregate one 5-fold CV → one value
         repeat_summary = {}
 
-        repeat_end = time.time()
-        repeat_duration_minutes = (repeat_end - repeat_start) / 60
-        print(f"Repeat {repeat_idx + 1} total duration: {repeat_duration_minutes:.2f} minutes")
-        repeat_summary["repeat_duration_minutes"] = repeat_duration_minutes
+        repeat_output_dir = os.path.join(
+            run_dir, f"repeat_{repeat_idx + 1}"
+        )
+
+        # Get fold train durations
+        fold_cumulative_durations = []
+        for file in Path(repeat_output_dir).rglob("fold_*/training_info.json"):
+            with open(file, "r") as f:
+                fold_cumulative_durations.append(json.load(f)["cumulative_training_minutes"])
+        
+        repeat_summary["repeat_duration_minutes"] = sum(fold_cumulative_durations)
 
         for key, val in fold_metrics[0].items():
             if key.startswith("eval_") and isinstance(val, (int, float)):
                 repeat_summary[key] = float(np.mean([fm[key] for fm in fold_metrics]))
 
         repeat_results.append(repeat_summary)
+        print(f"\nRepeat {repeat_idx + 1} CV summary metrics:")
+        for k, v in repeat_summary.items():
+            print(f"{k}: {v}")
+
+        # Save intermediate results after all repeats
+        with open(os.path.join(repeat_output_dir, "results.json"), "w") as f:
+            json.dump(repeat_results, f, indent=4)
     
     # -----------------------
     # 8. Aggregate CV metrics
@@ -223,14 +270,16 @@ def run_experiment(config_path: str, seed, activation_variant: str = 'original')
     for key in repeat_results[0]:
         final_results[key] = [r[key] for r in repeat_results]
 
-    # Stop full experiment timer
-    exp_end = time.time()
-    exp_duration_minutes = (exp_end - exp_start) / 60
+    # Get fold train durations
+    repeat_cumulative_durations = []
+    for file in Path(repeat_output_dir).rglob("result.json"):
+        with open(file, "r") as f:
+            fold_cumulative_durations.append(json.load(f)["repeat_duration_minutes"])
 
-    print(f"\nTotal experiment duration for seed {g_seed}, model {model}: {exp_duration_minutes:.2f} minutes")
-    final_results["experiment_duration_minutes"] = exp_duration_minutes
+    print(f"\nTotal experiment duration for seed {g_seed}, model {model}: {sum(repeat_cumulative_durations):.2f} minutes")
+    final_results["experiment_duration_minutes"] = sum(repeat_cumulative_durations)
 
-    with open(os.path.join(run_dir, "results.json"), "w") as f:
+    with open(os.path.join(run_dir, "final_results.json"), "w") as f:
         json.dump(final_results, f, indent=4)
 
     print("\n===== FINAL RESULTS =====")
