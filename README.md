@@ -1,12 +1,27 @@
 # sign-language-recognition
 A university project in Worclaw in in cooperation with the lecture "Advanced Topics of AI".
 
-![BaselineCNN Architecture](report_visualizations/final/baseline_cnn.svg)
+![BaselineCNN Architecture (without activation and regularization layers)](image.png)
+
+## Table of Contents
+- [sign-language-recognition](#sign-language-recognition)
+  - [Table of Contents](#table-of-contents)
+  - [Objective](#objective)
+    - [Research Steps](#research-steps)
+  - [Project Structure](#project-structure)
+  - [Installation](#installation)
+    - [Prerequisites](#prerequisites)
+    - [Setup](#setup)
+    - [Running the Project](#running-the-project)
+  - [Results](#results)
+    - [Performance Summary](#performance-summary)
+    - [Statistical Analysis](#statistical-analysis)
+  - [Visualizing the model architecture](#visualizing-the-model-architecture)
 
 ## Objective
 Conduct a statistical analysis on multiple experiment groups to analyze whether they are statistically different.
 
-### Research Steps:
+### Research Steps
 1. Define experiment groups (here: 3 CNN models varying in layer count and regularization factor)
 2. Train on a given dataset (here: https://www.kaggle.com/datasets/grassknoted/asl-alphabet).
 3. Evaluate results based on accuracy and F1-score.
@@ -22,6 +37,35 @@ _Disclaimer: It is not the main objective to train the best model for this task 
 
 For more detailed information, see the report.
 
+## Project Structure
+
+```
+sign-language-recognition/
+├── data/                              # Dataset directory
+│   └── asl_alphabet_dataset/          # ASL Alphabet dataset
+│       ├── train/                     # Training data
+│       ├── test/                      # Test data
+│       └── asl_alphabet_preprocessed/ # Preprocessed versions
+├── src/                               # Source code
+│   ├── models/                        # Model definitions
+│   │   ├── simple_cnn.py              # BaselineCNN, DeeperCNN, RegularizedCNN
+│   │   └── mobilenetv3.py             # MobileNetV3 model variants
+│   ├── dataloader/                    # Data loading utilities
+│   └── utils.py                       # Utility functions
+├── configs/                           # Configuration files
+├── output/                            # Experimental results for CNN variants
+│   ├── BaselineCNN/                   # BaselineCNN results
+│   ├── DeeperCNN/                     # DeeperCNN results
+│   ├── RegularizedCNN/                # RegularizedCNN results
+│   └── simple_experimental_results_0.1-5.csv  # Aggregated results
+├── report_visualizations/             # Model architecture visualizations
+├── train_simple.py                    # Training script for CNN models
+├── train.py                           # Training script for MobileNetV3
+├── preprocess.py                      # Data preprocessing script
+├── statistical_test.ipynb             # Statistical analysis notebook
+└── requirements.txt                   # Python dependencies
+```
+
 ## Installation
 
 ### Prerequisites
@@ -32,7 +76,7 @@ For more detailed information, see the report.
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/xuju-dev/sign-language-recognition.git
 cd sign-language-recognition
 ```
 
@@ -43,7 +87,7 @@ pip install -r requirements.txt
 
 3. Download the dataset from [Kaggle ASL Alphabet Dataset](https://www.kaggle.com/datasets/grassknoted/asl-alphabet) and place it in the `data/asl_alphabet_dataset/` directory.
 
-4. (Optional) Set up PYTHONPATH on macOS for model visualization:
+4. (Optional) Set up PYTHONPATH to project directory on macOS for model visualization:
 ```bash
 export PYTHONPATH=$(pwd)
 ```
