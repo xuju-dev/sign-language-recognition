@@ -25,4 +25,4 @@ for filename in os.listdir(test_folder):
 
     print(f"Moved '{filename}' → '{subfolder_path}/'")
 
-print("✅ All images organized into subfolders.")
+print("All images organized into subfolders.")

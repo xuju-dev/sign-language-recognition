@@ -107,27 +107,6 @@ for s in seeds:
     wilc_diff = np.abs(np.array(p_wilcoxon_scipy) - np.array(p_wilcoxon_ping))
     print(wilc_diff)
 
-    # x = np.arange(len(comparisons))
-    # width = 0.3                     # width of the bars
-
-    # fig, ax = plt.subplots(figsize=(8, 5))
-
-    # rects1 = ax.bar(x - width/2, p_scipy, width, label='SciPy')
-    # rects2 = ax.bar(x + width/2, p_pingouin, width, label='Pingouin')
-
-    # ax.text(0.5, 0.65, f'p-value difference: {diff:.4f}', fontsize=10, color='black')
-
-    # # Labels and formatting
-    # ax.set_ylabel('p-value')
-    # ax.set_title('Comparison of Friedman-ANOVA p-values: SciPy vs. Pingouin')
-    # ax.set_xticks(x)
-    # ax.set_xticklabels(comparisons)
-    # ax.axhline(0.05, color='red', linestyle='--', linewidth=1, label='α = 0.05')
-    # plt.ylim(0.3, 0.75) 
-    # ax.legend()
-
-    # plt.tight_layout()
-    # plt.show()
     fried_diffs.append(fried_diff)
     wilc_diffs.append(wilc_diff)
 

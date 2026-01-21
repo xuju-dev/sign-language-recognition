@@ -1,5 +1,104 @@
 # sign-language-recognition
-A project for university project in Worclaw in module "Advanced Topics of AI".
+A university project in Worclaw in in cooperation with the lecture "Advanced Topics of AI".
+
+![BaselineCNN Architecture](report_visualizations/final/baseline_cnn.svg)
+
+## Objective
+Conduct a statistical analysis on multiple experiment groups to analyze whether they are statistically different.
+
+### Research Steps:
+1. Define experiment groups (here: 3 CNN models varying in layer count and regularization factor)
+2. Train on a given dataset (here: https://www.kaggle.com/datasets/grassknoted/asl-alphabet).
+3. Evaluate results based on accuracy and F1-score.
+4. Do statistical tests:
+   - Friedman ANOVA
+   - Wilcoxon paired signed-rank
+   - Post-hoc Hommel correction
+5. Compute effect size:
+   - Friedman ANOVA effect size: Kendall's W
+   - Wilcoxon effect size: r
+
+_Disclaimer: It is not the main objective to train the best model for this task (SLR) but rather to learn to conduct and properly document a statistical analysis._
+
+For more detailed information, see the report.
+
+## Installation
+
+### Prerequisites
+- Python 3.8 or higher
+- pip (Python package manager)
+
+### Setup
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd sign-language-recognition
+```
+
+2. Install required dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+3. Download the dataset from [Kaggle ASL Alphabet Dataset](https://www.kaggle.com/datasets/grassknoted/asl-alphabet) and place it in the `data/asl_alphabet_dataset/` directory.
+
+4. (Optional) Set up PYTHONPATH on macOS for model visualization:
+```bash
+export PYTHONPATH=$(pwd)
+```
+
+### Running the Project
+
+To preprocess the data:
+```bash
+python preprocess.py
+```
+
+To train CNN models:
+```bash
+python train_simple.py
+```
+
+To train mobilenetv3_small model:
+```bash
+python train.py
+```
+
+To run statistical analysis:
+```bash
+jupyter notebook statistical_test.ipynb
+```
+
+## Results
+
+The experiments evaluate three CNN model variants:
+- **BaselineCNN**: Baseline CNN architecture (2-layered CNN with 1 max pooling layer, dropout factor 0.3)
+- **DeeperCNN**: Extended CNN with more layers (3-layered CNN with 2 max pooling layers, dropout factor 0.3)
+- **RegularizedCNN**: CNN with regularization techniques (3-layered CNN with 2 max pooling layers, dropout factor 0.5)
+
+### Performance Summary
+
+Models were trained with 5 times repeated 5-fold cross-validation on the ASL Alphabet dataset across 75 total runs (25 runs per model variant).
+
+**Key Metrics (averaged across all runs):**
+
+| Model | Accuracy | F1-Score | Training Duration (min) |
+|-------|----------|----------|------------------------|
+| BaselineCNN | 42.20% | 40.62% | 2.16 |
+| DeeperCNN | **45.74%** | **43.97%** | 2.86 |
+| RegularizedCNN | 42.76% | 41.07% | 2.88 |
+
+The **DeeperCNN** model achieved the highest accuracy and F1-score, suggesting that the increased model depth provides better discriminative power for this task.
+
+### Statistical Analysis
+
+Comprehensive statistical testing was performed using:
+- Friedman ANOVA with Kendall's W effect size
+- Wilcoxon paired signed-rank test with r effect size
+- Post-hoc Hommel correction for multiple comparisons
+
+Results and detailed statistical comparisons can be found in `output/simple_experimental_results_0.1-5.csv` and `statistical_test.ipynb`.
 
 ## Visualizing the model architecture
 The model architecture is visualized using `nnviz`.
@@ -28,5 +127,3 @@ nnviz src.models.simple_cnn:BaselineCNN -S show_specs=False -S show_node_name=Fa
 ```
 dot -Grankdir=LR -Tsvg report_visualizations/baseline_architecture.dot -o report_visualizations/baseline_architecture.svg
 ```
-
-dot -Grankdir=LR -Tsvg report_visualizations/regularized_architecture.dot -o report_visualizations/regularized_architecture.svg
