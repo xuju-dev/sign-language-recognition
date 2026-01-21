@@ -17,6 +17,7 @@ A university project in Worclaw in in cooperation with the lecture "Advanced Top
     - [Performance Summary](#performance-summary)
     - [Statistical Analysis](#statistical-analysis)
   - [Visualizing the model architecture](#visualizing-the-model-architecture)
+  - [Mentionable References](#mentionable-references)
 
 ## Objective
 Conduct a statistical analysis on multiple experiment groups to analyze whether they are statistically different.
@@ -35,7 +36,7 @@ Conduct a statistical analysis on multiple experiment groups to analyze whether 
 
 _Disclaimer: It is not the main objective to train the best model for this task (SLR) but rather to learn to conduct and properly document a statistical analysis._
 
-For more detailed information, see the report.
+For more detailed information, see the [final report](final_report/ATAI_P_Report_XU.pdf).
 
 ## Project Structure
 
@@ -104,7 +105,7 @@ To train CNN models:
 python train_simple.py
 ```
 
-To train mobilenetv3_small model:
+To train mobilenetv3_small model (https://huggingface.co/timm/mobilenetv3_small_100.lamb_in1k):
 ```bash
 python train.py
 ```
@@ -188,3 +189,11 @@ nnviz src.models.simple_cnn:BaselineCNN -S show_specs=False -S show_node_name=Fa
 ```
 dot -Grankdir=LR -Tsvg report_visualizations/baseline_architecture.dot -o report_visualizations/baseline_architecture.svg
 ```
+
+## Mentionable References
+Demšar, J. (2006). Statistical Comparisons of Classifiers over Multiple Data Sets. Journal of Machine Learning Research, 7(1), 1–30. Retrieved from http://jmlr.org/papers/v7/demsar06a.html
+
+Howard, A., Sandler, M., Chu, G., Chen, L.-C., Chen, B., Tan, M., Wang, W., Zhu, Y., Pang, R., Vasudevan, V., Le, Q. V., & Adam, H. (2019). Searching for MobileNetV3 (Version 5). arXiv. https://doi.org/10.48550/ARXIV.1905.02244
+
+
+For complete list please see [final report](final_report/ATAI_P_Report_XU.pdf).
