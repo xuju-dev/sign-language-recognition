@@ -80,6 +80,10 @@ def extract_metric_vectors_per_model(root_dir, repeats_per_seed=5, folds_per_rep
         if not model_dir.is_dir():
             continue
 
+        # Skip MobileNetV3 for now
+        if model_dir.name.startswith("Mobile"):
+            continue
+
         for seed_dir in model_dir.iterdir():
             if not seed_dir.is_dir():
                 continue

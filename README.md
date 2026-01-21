@@ -132,11 +132,11 @@ Models were trained with 5 times repeated 5-fold cross-validation on the ASL Alp
 
 | Model | Accuracy | F1-Score | Repeat Training Duration (min) |
 |-------|----------|----------|------|
-| BaselineCNN | 42.20% | 40.62% | 10.91 |
-| DeeperCNN | **45.74%** | **43.97%** | 14.56 |
-| RegularizedCNN | 42.76% | 41.07% | 14.58 |
+| BaselineCNN | 42.14% | 40.36% | 11.09 |
+| DeeperCNN | **46.02%** | **44.22%** | **14.61** |
+| RegularizedCNN | 40.15% | 38.20% | 14.43 |
 
-The **DeeperCNN** model achieved the highest accuracy and F1-score, suggesting that the increased model depth provides better discriminative power for this task.
+The **DeeperCNN** model achieved the highest accuracy and F1-score, suggesting that the increased model depth provides better discriminative power for this task. However, it also trains the longest albeit not much longer on average than RegularizedCNN.
 
 ### Statistical Analysis
 
