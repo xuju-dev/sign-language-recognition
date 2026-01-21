@@ -1,11 +1,11 @@
-# sign-language-recognition
+# Statistical Analysis of Sign Language Recognition with Simple CNN Models
 [Statistical Analysis of Sign Language Recognition with Simple CNN Models](docs/ATAI_P_Report_XU.pdf)
 A university project in Worclaw in in cooperation with the lecture "Advanced Topics of AI".
 
 ![BaselineCNN Architecture (without activation and regularization layers)](report_visualizations/model_architecture_white_bg.png)
 
 ## Table of Contents
-- [sign-language-recognition](#sign-language-recognition)
+- [Statistical Analysis of Sign Language Recognition with Simple CNN Models](#statistical-analysis-of-sign-language-recognition-with-simple-cnn-models)
   - [Table of Contents](#table-of-contents)
   - [Objective](#objective)
     - [Research Steps](#research-steps)
