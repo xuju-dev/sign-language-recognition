@@ -54,6 +54,7 @@ sign-language-recognition/
 │   ├── dataloader/                    # Data loading utilities
 │   └── utils.py                       # Utility functions
 ├── configs/                           # Configuration files
+├── docs/                              # Final report
 ├── output/                            # Experimental results for CNN variants
 │   ├── BaselineCNN/                   # BaselineCNN results
 │   ├── DeeperCNN/                     # DeeperCNN results
