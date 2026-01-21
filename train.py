@@ -1,3 +1,8 @@
+"""
+Training script for mobilenet v3 models with different activation functions
+using 5 times repeated 5-fold cross-validation.
+"""
+
 import os
 import json
 import time

@@ -1,3 +1,8 @@
+"""
+Training script for CNN models variant with different layer structures
+using 5 times repeated 5-fold cross-validation.
+"""
+
 import os
 import json
 from pathlib import Path

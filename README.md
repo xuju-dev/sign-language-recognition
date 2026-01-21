@@ -1,7 +1,7 @@
 # sign-language-recognition
 A university project in Worclaw in in cooperation with the lecture "Advanced Topics of AI".
 
-![BaselineCNN Architecture (without activation and regularization layers)](image.png)
+![BaselineCNN Architecture (without activation and regularization layers)](report_visualizations/model_architecture_white_bg.png)
 
 ## Table of Contents
 - [sign-language-recognition](#sign-language-recognition)
@@ -125,22 +125,39 @@ The experiments evaluate three CNN model variants:
 
 Models were trained with 5 times repeated 5-fold cross-validation on the ASL Alphabet dataset across 75 total runs (25 runs per model variant).
 
-**Key Metrics (averaged across all runs):**
+**Key Metrics (averaged across 5-fold CV):**
 
-| Model | Accuracy | F1-Score | Training Duration (min) |
-|-------|----------|----------|------------------------|
-| BaselineCNN | 42.20% | 40.62% | 2.16 |
-| DeeperCNN | **45.74%** | **43.97%** | 2.86 |
-| RegularizedCNN | 42.76% | 41.07% | 2.88 |
+| Model | Accuracy | F1-Score | Repeat Training Duration (min) |
+|-------|----------|----------|------|
+| BaselineCNN | 42.20% | 40.62% | 10.91 |
+| DeeperCNN | **45.74%** | **43.97%** | 14.56 |
+| RegularizedCNN | 42.76% | 41.07% | 14.58 |
 
 The **DeeperCNN** model achieved the highest accuracy and F1-score, suggesting that the increased model depth provides better discriminative power for this task.
 
 ### Statistical Analysis
 
-Comprehensive statistical testing was performed using:
-- Friedman ANOVA with Kendall's W effect size
-- Wilcoxon paired signed-rank test with r effect size
-- Post-hoc Hommel correction for multiple comparisons
+Comprehensive statistical testing was performed on 25 repeated measurements (5 repeats × 5-fold CV) per model:
+
+**Friedman ANOVA Test (overall difference test):**
+- Accuracy: χ² = 32.96, p-value = 6.96e-08 (significant)
+- F1-Score: χ² = 31.92, p-value = 1.17e-07 (significant)
+
+**Effect Size (Kendall's W):**
+- Accuracy: W = 0.6592 (large effect)
+- F1-Score: W = 0.6384 (large effect)
+
+**Pairwise Wilcoxon Signed-Rank Tests with Hommel Post-Hoc Correction:**
+- BaselineCNN vs. DeeperCNN: p = 6.39e-05 (significant)
+- BaselineCNN vs. RegularizedCNN: p = 3.78e-03 (significant)
+- DeeperCNN vs. RegularizedCNN: p = 3.58e-07 (significant)
+
+**Effect Size (r for Wilcoxon tests):**
+- BaselineCNN vs. DeeperCNN: r = 0.756 (large effect)
+- BaselineCNN vs. RegularizedCNN: r = 0.562 (large effect)
+- DeeperCNN vs. RegularizedCNN: r = 0.869 (large effect)
+
+**Conclusion:** All three model variants show statistically significant differences in performance. The DeeperCNN significantly outperforms both BaselineCNN and RegularizedCNN, with the largest effect size against RegularizedCNN.
 
 Results and detailed statistical comparisons can be found in `output/simple_experimental_results_0.1-5.csv` and `statistical_test.ipynb`.
 
