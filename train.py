@@ -91,7 +91,7 @@ def run_experiment(config_path: str, seed, activation_variant: str = 'original')
     # -----------------------
     # 5. Output directory & metadata
     dt = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    run_dir = prepare_output_dir(cfg["output_dir"], cfg["model_name"], activation_variant=activation_variant, seed=seed)
+    run_dir = prepare_output_dir(cfg["output_dir"], activation_variant="MobileNetV3", seed=seed)
     save_metadata(run_dir, cfg, seed, activation_variant)
     print(f"Saved model metadata to directory: {run_dir}")
 
@@ -294,7 +294,7 @@ def run_experiment(config_path: str, seed, activation_variant: str = 'original')
 
 if __name__ == "__main__":
     CONFIG_PATH = "configs/mobilenet_v3.yaml"
-    SEED_FILE = "experiments/global_seeds.json"
+    SEED_FILE = "output/global_seeds.json"
     NUM_SEEDS = 5
 
     # Load or generate seeds
@@ -311,7 +311,7 @@ if __name__ == "__main__":
     if os.path.exists(CONFIG_PATH):
         print(f"Using config file at: {CONFIG_PATH}")
 
-    model_variants = ['original', 'relu', 'leakyrelu']  # or ['original', 'relu', 'leakyrelu']
+    model_variants = ['original']  # or ['original', 'relu', 'leakyrelu']
 
     for g_seed in global_seeds:
         for model in model_variants:
