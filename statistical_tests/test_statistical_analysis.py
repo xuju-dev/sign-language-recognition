@@ -62,7 +62,7 @@ for s in seeds:
     })
 
     # Friedman test
-    p_fried_ping = pg.friedman(data=df, method='f')
+    p_fried_ping = pg.friedman(data=df, method='chisq')
     print(f"(pingouin) Friedman test p-value: {p_fried_ping['p-unc'].values[0]}")
 
     # Wilcoxon paired test
