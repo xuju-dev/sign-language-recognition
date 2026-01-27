@@ -20,15 +20,15 @@ for s in seeds:
     v2 = np.random.rand(25)
     v3 = np.random.rand(25)
 
-    print("Seed: 42")
-    print(f"Vector 1:\n{v1}\n")
-    print(f"Vector 2:\n{v2}\n")
-    print(f"Vector 3:\n{v3}\n")
+    # print("Seed: 42")
+    # print(f"Vector 1:\n{v1}\n")
+    # print(f"Vector 2:\n{v2}\n")
+    # print(f"Vector 3:\n{v3}\n")
 
     # TODO: Load in evaluation results from training
 
     # Statistical Analysis
-    print("Statistical Analysis:\n")
+    print("\nStatistical Analysis:\n")
     # === scipy + statsmodels ===
     # Friedman test
     stat_fried, p_fried = friedmanchisquare(v1, v2, v3)
@@ -115,7 +115,9 @@ for s in seeds:
 
 print("\nSummary of p-value differences across seeds:")
 print(f"Friedman-ANOVA p-value differences: {fried_diffs}")
+print(f"Friedman-ANOVA p-value differences max, min, avg: {np.max(fried_diffs), np.min(fried_diffs), np.mean(fried_diffs)}\n")
 print(f"Wilcoxon p-value differences: {wilc_diffs}")
+print(f"Wilcoxon p-value differences max, min, avg: {np.max(wilc_diffs), np.min(wilc_diffs), np.mean(wilc_diffs)}\n")
 
 plt.figure(figsize=(10, 5))
 # Create evenly spaced positions: 0..9
