@@ -1,5 +1,5 @@
 # Statistical Analysis of Sign Language Recognition with Simple CNN Models
-[Statistical Analysis of Sign Language Recognition with Simple CNN Models](docs/ATAI_P_Report_XU.pdf)
+[Statistical Analysis of Sign Language Recognition with Simple CNN Models](docs/ATAI_P_Final_Report_XU.pdf)
 A university project in Worclaw in in cooperation with the lecture "Advanced Topics of AI".
 
 ![BaselineCNN Architecture (without activation and regularization layers)](report_visualizations/model_architecture_white_bg.png)
@@ -41,7 +41,7 @@ Conduct a statistical analysis on multiple experiment groups to analyze whether 
 
 _Disclaimer: It is not the main objective to train the best model for this task (SLR) but rather to learn to conduct and properly document a statistical analysis._
 
-For more detailed information, see the [final report](docs/ATAI_P_Report_XU.pdf).
+For more detailed information, see the [final report](docs/ATAI_P_Final_Report_XU.pdf).
 
 ## Project Structure
 
@@ -237,4 +237,4 @@ Demšar, J. (2006). Statistical Comparisons of Classifiers over Multiple Data Se
 Howard, A., Sandler, M., Chu, G., Chen, L.-C., Chen, B., Tan, M., Wang, W., Zhu, Y., Pang, R., Vasudevan, V., Le, Q. V., & Adam, H. (2019). Searching for MobileNetV3 (Version 5). arXiv. https://doi.org/10.48550/ARXIV.1905.02244
 
 
-For complete list please see [final report](docs/ATAI_P_Report_XU.pdf).
+For complete list please see [final report](docs/ATAI_P_Final_Report_XU.pdf).
