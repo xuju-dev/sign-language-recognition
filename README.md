@@ -15,8 +15,12 @@ A university project in Worclaw in in cooperation with the lecture "Advanced Top
     - [Setup](#setup)
     - [Running the Project](#running-the-project)
   - [Results](#results)
-    - [Performance Summary](#performance-summary)
+    - [Performance Metrics](#performance-metrics)
     - [Statistical Analysis](#statistical-analysis)
+      - [Friedman ANOVA Test](#friedman-anova-test)
+      - [Wilcoxon Signed-Rank Test (Accuracy)](#wilcoxon-signed-rank-test-accuracy)
+      - [Wilcoxon Signed-Rank Test (F1-Score)](#wilcoxon-signed-rank-test-f1-score)
+      - [Notes](#notes)
   - [Visualizing the model architecture](#visualizing-the-model-architecture)
   - [Mentionable References](#mentionable-references)
 
@@ -124,45 +128,80 @@ The experiments evaluate three CNN model variants:
 - **DeeperCNN**: Extended CNN with more layers (3-layered CNN with 2 max pooling layers, dropout factor 0.3)
 - **RegularizedCNN**: CNN with regularization techniques (3-layered CNN with 2 max pooling layers, dropout factor 0.5)
 
-### Performance Summary
+### Performance Metrics
+Models were trained with ** 5 times repeated 5-fold cross-validation** (n=25 runs) on the ASL Alphabet dataset resulting in total 75 total runs (25 runs per model variant).
 
-Models were trained with 5 times repeated 5-fold cross-validation on the ASL Alphabet dataset across 75 total runs (25 runs per model variant).
+Metrics reported include **Accuracy**, **Macro F1-Score**, and **Training Time** (minutes).  
 
-**Key Metrics (averaged across 5-fold CV):**
+Values are reported as **mean ± standard deviation** (rounded to four decimal places).
 
-| Model | Accuracy | F1-Score | Repeat Training Duration (min) |
-|-------|----------|----------|------|
-| BaselineCNN | 42.14% | 40.36% | 11.09 |
-| DeeperCNN | **46.02%** | **44.22%** | **14.61** |
-| RegularizedCNN | 40.15% | 38.20% | 14.43 |
+| Metric | BaselineCNN | DeeperCNN | RegularizedCNN |
+|--------|------------|-----------|----------------|
+| Accuracy | 0.4214 ± 0.0073 | 0.4602 ± 0.0290 | 0.4015 ± 0.0319 |
+| F1-Score (Macro) | 0.4036 ± 0.0073 | 0.4422 ± 0.0309 | 0.3820 ± 0.0330 |
+| Training Time (minutes) | 11.09 ± 0.48 | 14.61 ± 0.48 | 14.44 ± 0.40 |
 
-The **DeeperCNN** model achieved the highest accuracy and F1-score, suggesting that the increased model depth provides better discriminative power for this task. However, it also trains the longest albeit not much longer on average than RegularizedCNN.
+> **Note:** Accuracy and F1-score values are fractions (0–1). Training Time is per model run.
 
 ### Statistical Analysis
 
 Comprehensive statistical testing was performed on 25 repeated measurements (5 repeats × 5-fold CV) per model:
 
-**Friedman ANOVA Test (overall difference test):**
-- Accuracy: χ² = 32.96, p-value = 6.96e-08 (significant)
-- F1-Score: χ² = 31.92, p-value = 1.17e-07 (significant)
+#### Friedman ANOVA Test
+
+P-values from Friedman ANOVA for model performance metrics. Significance is evaluated at α = 0.05.
+
+| Metric | p-value | Significant (α=0.05) |
+|--------|---------|---------------------|
+| Accuracy | 6.96e-8 | ✓ |
+| F1-Score (Macro) | 1.17e-7 | ✓ |
+
 
 **Effect Size (Kendall's W):**
-- Accuracy: W = 0.6592 (large effect)
-- F1-Score: W = 0.6384 (large effect)
+- Accuracy: W = 0.66 (large effect)
+- F1-Score: W = 0.64 (large effect)
 
-**Pairwise Wilcoxon Signed-Rank Tests with Hommel Post-Hoc Correction:**
-- BaselineCNN vs. DeeperCNN: p = 6.39e-05 (significant)
-- BaselineCNN vs. RegularizedCNN: p = 3.78e-03 (significant)
-- DeeperCNN vs. RegularizedCNN: p = 3.58e-07 (significant)
+---
 
-**Effect Size (r for Wilcoxon tests):**
-- BaselineCNN vs. DeeperCNN: r = 0.756 (large effect)
-- BaselineCNN vs. RegularizedCNN: r = 0.562 (large effect)
-- DeeperCNN vs. RegularizedCNN: r = 0.869 (large effect)
+#### Wilcoxon Signed-Rank Test (Accuracy)
 
-**Conclusion:** All three model variants show statistically significant differences in performance. The DeeperCNN significantly outperforms both BaselineCNN and RegularizedCNN, with the largest effect size against RegularizedCNN.
+Pairwise comparisons of models using Wilcoxon signed-rank test with **Hommel correction**:
 
-Results and detailed statistical comparisons can be found in `output/simple_experimental_results_0.1-5.csv` and `statistical_test.ipynb`.
+| Comparison | Wilcoxon p-value | Hommel-corrected p | Significant (α=0.05) |
+|------------|----------------|------------------|---------------------|
+| BaselineCNN vs DeeperCNN | 3.19e-5 | 6.39e-5 | ✓ |
+| BaselineCNN vs RegularizedCNN | 3.78e-3 | 3.78e-3 | ✓ |
+| DeeperCNN vs RegularizedCNN | 1.19e-7 | 3.58e-7 | ✓ |
+
+**Effect Size r for Wilcoxon tests (Accuracy):**
+- BaselineCNN vs. DeeperCNN: r = 0.76 (large effect)
+- BaselineCNN vs. RegularizedCNN: r = 0.56 (large effect)
+- DeeperCNN vs. RegularizedCNN: r = 0.87 (large effect)
+
+#### Wilcoxon Signed-Rank Test (F1-Score)
+
+| Comparison | Wilcoxon p-value | Hommel-corrected p | Significant (α=0.05) |
+|------------|----------------|------------------|---------------------|
+| BaselineCNN vs DeeperCNN | 4.54e-5 | 9.08e-5 | ✓ |
+| BaselineCNN vs RegularizedCNN | 1.63e-3 | 1.63e-3 | ✓ |
+| DeeperCNN vs RegularizedCNN | 1.19e-7 | 3.58e-7 | ✓ |
+
+**Effect Size r for Wilcoxon tests (F1-Score):**
+- BaselineCNN vs. DeeperCNN: r = 0.75 (large effect)
+- BaselineCNN vs. RegularizedCNN: r = 0.61 (large effect)
+- DeeperCNN vs. RegularizedCNN: r = 0.87 (large effect)
+
+---
+
+#### Notes
+
+- **Best performing model** for Accuracy and F1-Score: **DeeperCNN**  
+- Performance and training time boxplots are available in `test_visualization/model_performance_comparison.png`  
+- Effect sizes can be added to highlight practical significance.
+  
+**Conclusion:** All three model variants show statistically significant differences. The DeeperCNN model outperforms both BaselineCNN and RegularizedCNN and shows the highest statistically significant difference when compaired with the other two models. With its largest effect size against RegularizedCNN.
+
+Results and detailed statistical comparisons can be run and found in `output/simple_experimental_results_0.1-5.csv` and `statistical_test.ipynb`.
 
 ## Visualizing the model architecture
 The model architecture is visualized using `nnviz`.
